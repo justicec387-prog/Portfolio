@@ -1,0 +1,57 @@
+As a Director of Operations, maintaining high-margin client relationships is the primary driver of firm stability. This project demonstrates a Predictive Operations Engine designed to identify "At-Risk" consulting clients before they terminate their contracts.
+
+By integrating Heuristic AI Modeling with SQL Departmental Audits, this tool allowed for a strategic pivot in the Real Estate sector, identifying significant Monthly Recurring Revenue (MRR) currently sitting in the "Danger Zone."
+
+🛠️ The Technical Stack
+Python (Predictive Modeling): Developed a heuristic health-scoring algorithm to quantify client engagement and retention probability.
+
+SQL (Aggregated Auditing): Performed cross-departmental analysis to identify industry-wide instability.
+
+Tableau (Executive Dashboard): Created a live "Strategic Intervention Queue" to prioritize retention efforts for high-value accounts.
+
+🚀 The "Health Score" Logic (AI Model)
+The model assigns a health score (0-100) to every client based on three operational pillars:
+
+Recency: Penalizes accounts with zero interaction for >30 days.
+
+Engagement: Flags accounts where billables are high but engagement hours are low (The "Neglect" Signal).
+
+Commitment: Rewards long-term (24-month) contract structures.
+
+📊 Visualizations & Decision Support
+1. Strategic Intervention Queue
+
+A prioritized list of clients sorted by ascending health score, identifying the exact high-value accounts requiring immediate operational focus.
+
+Link to Interactive Tableau Dashboard
+
+2. Industry Risk Audit (SQL Output)
+
+Industry	Total Clients	Avg Health Score	Total Revenue
+Real Estate	12	42.5	$142,000
+Tech	15	78.2	$210,000
+Healthcare	10	65.4	$125,000
+💻 Sample SQL Insight: Industry Risk Audit
+SQL
+-- Identifying the 'Weakest Link' industries based on Average Health
+SELECT industry, 
+       AVG(health_score) as avg_health,
+       SUM(monthly_billable) as total_revenue
+FROM consulting_df
+GROUP BY industry
+ORDER BY avg_health ASC;
+📈 Operational Impact
+Predictive Awareness: Provided a 30-day "Lead Time" on potential contract cancellations.
+
+Resource Allocation: Enabled the firm to reassign consultants from "Stable" accounts to "At-Risk" high-value accounts.
+
+Revenue Protection: Identified Real Estate as the highest-risk industry, prompting a specialized retention campaign to secure the fiscal quarter.
+
+
+
+
+
+
+Designed and Built by Justice Director of Operations | Data Analytics & AI Specialist
+
+
