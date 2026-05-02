@@ -27,30 +27,6 @@ https://public.tableau.com/views/StrategicOperationsChurnMitigationDashboard/She
 
 "Visualizations" 
 
-https://public.tableau.com/app/profile/justice.cruz/viz/StrategicOperationsChurnMitigationDashboard/Sheet1#1
-
-2. Industry Risk Audit (SQL Output)
-
-Industry	Total Clients	Avg Health Score	Total Revenue
-Real Estate	12	42.5	$142,000
-Tech	15	78.2	$210,000
-Healthcare	10	65.4	$125,000
-💻 Sample SQL Insight: Industry Risk Audit
-SQL
--- Identifying the 'Weakest Link' industries based on Average Health
-SELECT industry, 
-       AVG(health_score) as avg_health,
-       SUM(monthly_billable) as total_revenue
-FROM consulting_df
-GROUP BY industry
-ORDER BY avg_health ASC;
-📈 Operational Impact
-Predictive Awareness: Provided a 30-day "Lead Time" on potential contract cancellations.
-
-Resource Allocation: Enabled the firm to reassign consultants from "Stable" accounts to "At-Risk" high-value accounts.
-
-Revenue Protection: Identified Real Estate as the highest-risk industry, prompting a specialized retention campaign to secure the fiscal quarter.
-
 
 
 
