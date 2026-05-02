@@ -19,11 +19,13 @@ Engagement: Flags accounts where billables are high but engagement hours are low
 Commitment: Rewards long-term (24-month) contract structures.
 
 📊 Visualizations & Decision Support
-1. Strategic Intervention Queue
+ Strategic Intervention Queue
 
 A prioritized list of clients sorted by ascending health score, identifying the exact high-value accounts requiring immediate operational focus.
 
 https://public.tableau.com/views/StrategicOperationsChurnMitigationDashboard/Sheet1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
+
+Visualtizations
 
 
 
