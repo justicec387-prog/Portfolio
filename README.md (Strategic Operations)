@@ -1,32 +1,11 @@
-As a Director of Operations, maintaining high-margin client relationships is the primary driver of firm stability. This project demonstrates a Predictive Operations Engine designed to identify "At-Risk" consulting clients before they terminate their contracts.
+As a Director of Operations, I thoguht it would behoove me to create a high-margin client relationships is the primary driver of firm stability. 
 
-By integrating Heuristic AI Modeling with SQL Departmental Audits, this tool allowed for a strategic pivot in the Real Estate sector, identifying significant Monthly Recurring Revenue (MRR) currently sitting in the "Danger Zone."
+This project demonstrates a Predictive Operations Engine designed to identify "At-Risk" clients in need of a follow up and or consultation from someone in the firm before they terminate their contracts.
 
-🛠️ The Technical Stack
-Python (Predictive Modeling): Developed a heuristic health-scoring algorithm to quantify client engagement and retention probability.
-
-SQL (Aggregated Auditing): Performed cross-departmental analysis to identify industry-wide instability.
-
-Tableau (Executive Dashboard): Created a live "Strategic Intervention Queue" to prioritize retention efforts for high-value accounts.
-
-🚀 The "Health Score" Logic (AI Model)
-The model assigns a health score (0-100) to every client based on three operational pillars:
-
-Recency: Penalizes accounts with zero interaction for >30 days.
-
-Engagement: Flags accounts where billables are high but engagement hours are low (The "Neglect" Signal).
-
-Commitment: Rewards long-term (24-month) contract structures.
-
-📊 Visualizations & Decision Support
- Strategic Intervention Queue
+By integrating Heuristic AI Modeling with SQL Departmental Audits, this tool allowed me to create a strategic pivot in the Real Estate sector and other sectors that we have contracts with, identifying significant Monthly Recurring Revenue (MRR) currently sitting in the "Danger Zone."
 
 A prioritized list of clients sorted by ascending health score, identifying the exact high-value accounts requiring immediate operational focus.
 
 https://public.tableau.com/views/StrategicOperationsChurnMitigationDashboard/Sheet1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
-
-Visualtizations
-
-
 
 Designed and Built by Justice Director of Operations | Data Analytics & AI Specialist
