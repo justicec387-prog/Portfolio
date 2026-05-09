@@ -4,7 +4,7 @@
   "metadata": {
     "colab": {
       "provenance": [],
-      "authorship_tag": "ABX9TyOUWkRhLhgadqe4yYALPW4M",
+      "authorship_tag": "ABX9TyNZahxfDy4LPPV+qe3XJOqH",
       "include_colab_link": true
     },
     "kernelspec": {
@@ -28,12 +28,353 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "source": [
+        "from google.colab import auth\n",
+        "auth.authenticate_user()\n",
+        "print('Authenticated')\n",
+        "\n",
+        "# Replace with your actual GCP Project ID\n",
+        "project_id = 'Cannabis Market: A Geospatial and Social Equity Analysis'"
+      ],
       "metadata": {
-        "id": "grhYcjsP1kCx"
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BHOh61Sw33Eg",
+        "outputId": "edbf819b-91fb-4425-ea33-246090cd05dc"
       },
-      "outputs": [],
-      "source": []
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Authenticated\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "import pandas as pd\n",
+        "\n",
+        "# List all files to see the exact names Colab has\n",
+        "print(\"Files currently in Colab:\")\n",
+        "print(os.listdir('/content/'))\n",
+        "\n",
+        "# Use the exact name from the list above\n",
+        "# I've added the /content/ prefix which is standard for Colab\n",
+        "try:\n",
+        "    df_licenses = pd.read_csv('//DECENNIALPL2020.csv')\n",
+        "    print(\"File 1 loaded successfully!\")\n",
+        "except FileNotFoundError:\n",
+        "    print(\"File 1 still not found. Check the sidebar for the exact spelling.\")\n",
+        "\n",
+        "# Do the same for your second OCM file\n",
+        "# df_equity = pd.read_csv('/Current_OCM_License.csv')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "gTKFayuI7l2e",
+        "outputId": "536f1255-9f94-4093-81b3-91faa6b94c05"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Files currently in Colab:\n",
+            "['.config', 'sample_data']\n",
+            "File 1 loaded successfully!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Check the Census Data\n",
+        "print(\"--- Census Data Columns ---\")\n",
+        "print(df_licenses.columns.tolist())\n",
+        "print(df_licenses.head())\n",
+        "\n",
+        "# Check the OCM Data (replace 'df_ocm' with your second variable)\n",
+        "# print(\"\\n--- OCM Data Columns ---\")\n",
+        "# print(df_ocm.columns.tolist())\n",
+        "# print(df_ocm.head())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "W2fIdw4p8TMf",
+        "outputId": "6827dadf-9b93-4c84-c630-14dc737e777c"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- Census Data Columns ---\n",
+            "['Label (Grouping)', 'Bronx County, New York', 'Kings County, New York', 'New York County, New York', 'Queens County, New York', 'Richmond County, New York']\n",
+            "                                  Label (Grouping) Bronx County, New York  \\\n",
+            "0                                           Total:              1,472,654   \n",
+            "1                          Population of one race:              1,280,481   \n",
+            "2                                      White alone                207,573   \n",
+            "3                  Black or African American alone                487,118   \n",
+            "4          American Indian and Alaska Native alone                 21,539   \n",
+            "\n",
+            "  Kings County, New York New York County, New York Queens County, New York  \\\n",
+            "0              2,736,074                 1,694,251               2,405,464   \n",
+            "1              2,498,775                 1,518,810               2,162,100   \n",
+            "2              1,028,774                   847,604                 621,475   \n",
+            "3                772,050                   229,361                 403,077   \n",
+            "4                 20,598                     9,969                  30,513   \n",
+            "\n",
+            "  Richmond County, New York  \n",
+            "0                   495,747  \n",
+            "1                   456,927  \n",
+            "2                   295,519  \n",
+            "3                    52,039  \n",
+            "4                     3,599  \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 1. Load the OCM Licensing Data\n",
+        "# Ensure you have renamed the second file to 'Current_OCM_License.csv' in the sidebar\n",
+        "try:\n",
+        "    df_ocm = pd.read_csv('/Current_OCM_License.csv')\n",
+        "    print(\"OCM License file loaded successfully!\")\n",
+        "\n",
+        "    # 2. Standardize OCM Column Names\n",
+        "    # This removes spaces and makes them lowercase for SQL compatibility\n",
+        "    df_ocm.columns = [c.lower().replace(' ', '_') for c in df_ocm.columns]\n",
+        "\n",
+        "    # 3. Standardize the 'County' column for the Join\n",
+        "    # We want 'Bronx' to match 'Bronx' across both files\n",
+        "    if 'county' in df_ocm.columns:\n",
+        "        df_ocm['county'] = df_ocm['county'].str.strip().str.title()\n",
+        "        # Specific fix: Ensure 'New York' (Manhattan) matches the Census formatting\n",
+        "        df_ocm['county'] = df_ocm['county'].replace('New York', 'New York')\n",
+        "\n",
+        "    print(\"\\n--- OCM Data Preview ---\")\n",
+        "    print(df_ocm[['license_number', 'county', 'license_status']].head())\n",
+        "\n",
+        "except FileNotFoundError:\n",
+        "    print(\"Error: 'Current_OCM_License.csv' not found. Check the sidebar names.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Hv_k6xGY9WYQ",
+        "outputId": "08a5741d-15b5-4731-f763-f5ca414808c0"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "OCM License file loaded successfully!\n",
+            "\n",
+            "--- OCM Data Preview ---\n",
+            "       license_number       county license_status\n",
+            "0  OCM-RETL-25-000306        Kings         Active\n",
+            "1                 NaN        Kings     In-Process\n",
+            "2  OCM-PROC-24-000096          NaN         Active\n",
+            "3  OCM-RETL-24-000123  Westchester         Active\n",
+            "4  OCM-RETL-25-000303       Queens         Active\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Handle missing counties by labeling them 'Unknown' so they don't break our JOIN\n",
+        "df_ocm['county'] = df_ocm['county'].fillna('Unknown')\n",
+        "\n",
+        "# For your portfolio, it's good to separate 'Active' vs 'In-Process'\n",
+        "# Let's create a clean dataframe with only the data that has a license number\n",
+        "df_ocm_final = df_ocm.dropna(subset=['license_number']).copy()\n",
+        "\n",
+        "print(\"--- Cleaned OCM Table Preview ---\")\n",
+        "print(df_ocm_final[['license_number', 'county', 'license_status']].head())\n",
+        "print(f\"\\nTotal Active/Issued Licenses: {len(df_ocm_final)}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fLPhBN1C9rgs",
+        "outputId": "66cc2e8a-62de-4d80-90b7-1e7a65716e44"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- Cleaned OCM Table Preview ---\n",
+            "        license_number       county license_status\n",
+            "0   OCM-RETL-25-000306        Kings         Active\n",
+            "2   OCM-PROC-24-000096      Unknown         Active\n",
+            "3   OCM-RETL-24-000123  Westchester         Active\n",
+            "4   OCM-RETL-25-000303       Queens         Active\n",
+            "5  OCM-CAURD-24-000177        Kings         Active\n",
+            "\n",
+            "Total Active/Issued Licenses: 2476\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Standardize 'Kings' to 'Brooklyn' or 'New York' to 'Manhattan' if needed\n",
+        "# But the Census data we 'melted' uses: Bronx, Kings, New York, Queens, Richmond\n",
+        "# We need to make sure the OCM names match those exactly.\n",
+        "\n",
+        "# Quick check: What are the unique counties in your OCM data?\n",
+        "print(\"Unique counties in OCM data:\", df_ocm_final['county'].unique()[:10])\n",
+        "\n",
+        "# EXPORT TO BIGQUERY\n",
+        "import pandas_gbq\n",
+        "\n",
+        "# Replace with your actual project ID\n",
+        "project_id = 'your-gcp-project-id'\n",
+        "\n",
+        "# Deployment\n",
+        "try:\n",
+        "    pandas_gbq.to_gbq(df_census_cleaned, 'ocm_analysis.census_data', project_id=project_id, if_exists='replace')\n",
+        "    pandas_gbq.to_gbq(df_ocm_final, 'ocm_analysis.active_licenses', project_id=project_id, if_exists='replace')\n",
+        "    print(\"\\nSUCCESS: Cloud Pipeline Active. Data is now in BigQuery.\")\n",
+        "except Exception as e:\n",
+        "    print(f\"\\nExport failed: {e}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "dpXawX0896o6",
+        "outputId": "70909d42-f99a-47a6-84e3-68f3a976e35c"
+      },
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Unique counties in OCM data: ['Kings' 'Unknown' 'Westchester' 'Queens' 'Suffolk' 'New York' 'Orange'\n",
+            " 'Schenectady' 'Cortland' 'Dutchess']\n",
+            "\n",
+            "Export failed: name 'df_census_cleaned' is not defined\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 1. Install the required library if needed\n",
+        "!pip install pandas-gbq -q\n",
+        "\n",
+        "import pandas as pd\n",
+        "import pandas_gbq\n",
+        "\n",
+        "# 0. CONFIGURATION (Using your specific IDs)\n",
+        "project_id = 'cannabis-analysis-421519'\n",
+        "dataset_id = 'OCM_analysis'\n",
+        "\n",
+        "try:\n",
+        "    # 1. TRANSFORM CENSUS DATA\n",
+        "    df_census = pd.read_csv('/DECENNIALPL2020.csv')\n",
+        "    total_pop = df_census[df_census['Label (Grouping)'] == 'Total:'].copy()\n",
+        "    df_census_cleaned = total_pop.melt(id_vars=['Label (Grouping)'],\n",
+        "                                      var_name='county',\n",
+        "                                      value_name='total_population')\n",
+        "    df_census_cleaned['county'] = df_census_cleaned['county'].str.replace(' County, New York', '', regex=False)\n",
+        "    df_census_cleaned['total_population'] = df_census_cleaned['total_population'].str.replace(',', '').astype(int)\n",
+        "    df_census_cleaned = df_census_cleaned.drop(columns=['Label (Grouping)'])\n",
+        "\n",
+        "    # 2. TRANSFORM OCM DATA\n",
+        "    df_ocm = pd.read_csv('/Current_OCM_License.csv')\n",
+        "    df_ocm.columns = [c.lower().replace(' ', '_') for c in df_ocm.columns]\n",
+        "    df_ocm['county'] = df_ocm['county'].fillna('Unknown')\n",
+        "    df_ocm_final = df_ocm.dropna(subset=['license_number']).copy()\n",
+        "    df_ocm_final['county'] = df_ocm_final['county'].str.strip().str.title()\n",
+        "\n",
+        "    # 3. EXPORT TO BIGQUERY\n",
+        "    print(f\"Connecting to Project: {project_id}...\")\n",
+        "\n",
+        "    # Export Census\n",
+        "    pandas_gbq.to_gbq(df_census_cleaned,\n",
+        "                      f'{dataset_id}.census_pop_2020',\n",
+        "                      project_id=project_id,\n",
+        "                      if_exists='replace')\n",
+        "\n",
+        "    # Export OCM\n",
+        "    pandas_gbq.to_gbq(df_ocm_final,\n",
+        "                      f'{dataset_id}.nys_licenses_active',\n",
+        "                      project_id=project_id,\n",
+        "                      if_exists='replace')\n",
+        "\n",
+        "    print(\"\\nSUCCESS: Both tables are now live in your BigQuery Cloud Warehouse!\")\n",
+        "\n",
+        "except Exception as e:\n",
+        "    print(f\"\\nDeployment error: {e}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kMuXi320BvjV",
+        "outputId": "eac5e253-ebb4-471d-e029-eb5c0f1bf5bf"
+      },
+      "execution_count": 26,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Connecting to Project: cannabis-analysis-421519...\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 1/1 [00:00<00:00, 7958.83it/s]\n",
+            "100%|██████████| 1/1 [00:00<00:00, 3964.37it/s]"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "SUCCESS: Both tables are now live in your BigQuery Cloud Warehouse!\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "\n"
+          ]
+        }
+      ]
     }
   ]
 }
